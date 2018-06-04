@@ -59,14 +59,12 @@ end
 
 function [Xf] = compute_terminalConstraintSet(X,U,Z,K,Ak)
     % MPIset is computed only once in the constructor;
-    [F, G, nc] = Polyhedron2Matrix(X, U);
-    Fpi = @(i) (F+G*K)*Ak^i;
-    Xpi = @(i) Polyhedron(Fpi(i), ones(size(Fpi(i))*[1; 0], 1));
-    Xf = Xpi(0);
+    
+    Xf = Xpi(0,X,U,K,Ak);
     i= 0;
     while(1) % 
         i = i + 1;
-        Xf_tmp = and(Xf, Xpi(i));
+        Xf_tmp = and(Xf, Xpi(i,X,U,K,Ak));
         if Xf_tmp == Xf
             break;
         else
@@ -77,6 +75,11 @@ function [Xf] = compute_terminalConstraintSet(X,U,Z,K,Ak)
 end
 
 
+function [Xret] = Xpi(i,X,U,K,Ak)
+    [F, G, ~] = Polyhedron2Matrix(X, U);
+    Fpi = (F+G*K)*Ak^i;
+    Xret = Polyhedron(Fpi, ones(size(Fpi,1), 1));
+end
 function H = compute_cost(Q,R,P,N)
     % compute H
     Q_ = [];
