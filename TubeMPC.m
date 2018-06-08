@@ -58,8 +58,7 @@ function [x_tmpc,u_tmpc,x_seq,u_seq,Z,Xf] = TubeMPC(A,B,Q,R,X,U,W,N,x_init)
 end
 
 function [Xf] = compute_terminalConstraintSet(X,U,Z,K,Ak)
-    % MPIset is computed only once in the constructor;
-    
+
     Xf = Xpi(0,X,U,K,Ak);
     i= 0;
     while(1) % 
